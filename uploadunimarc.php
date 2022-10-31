@@ -68,7 +68,7 @@ fclose($myfile);
    case 2:
      if ($uploadOK==1){
  
-     include('izvestaj.php');
+     include('reportISBD.php');
      }
      else { echo "Neuspesan pokusaj       uploadovanja!";}  
      break;
