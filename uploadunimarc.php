@@ -11,10 +11,10 @@
        $uploadOK=0;
     }
   }
-  $filename=$path;
+;
   if(file_exists('knjige.xml')) unlink('knjige.xml');
-  chmod($filename,0755);
-  rename($filename, 'knjige.xml');
+  chmod($path,0755);
+  rename($path, 'knjige.xml');
   ini_set('memory_limit', '1024M');
  $xml = simplexml_load_file("knjige.xml") or die("Ne mogu da otvorim knjige.xml za parsiranje.");
   
