@@ -11,7 +11,7 @@
        $uploadOK=0;
     }
   }
-  $filename=basename($_FILES['uploaded_file']['name']);
+  $filename=$path;
   if(file_exists('knjige.xml')) unlink('knjige.xml');
   chmod($filename,0755);
   rename($filename, 'knjige.xml');
