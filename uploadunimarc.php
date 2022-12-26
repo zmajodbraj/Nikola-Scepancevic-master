@@ -14,7 +14,7 @@
 
   if(file_exists('knjige.xml')) unlink('knjige.xml'); //obrisemo trenutni fajl da bismo kreirali novi imenovan knjige.xml.
   chmod($path,0755);
-  rename($path, 'knjige.xml');//postavimo uploadovan fajl da bude knjige.xml. 
+  rename($path, 'knjige.xml');//preimenujemo uploadovan fajl u knjige.xml. 
   ini_set('memory_limit', '1024M');//za robusnije xml fajlove postavimo memorijsko ogranicenje
   $xml = simplexml_load_file("knjige.xml") or die("Ne mogu da otvorim knjige.xml za parsiranje.");//prvi prolaz kroz parser, spajanje etiketa sa f(polja) i s(potpolja) oznakama
 if(file_exists('knjige3.xml')) unlink('knjige3.xml');
