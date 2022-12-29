@@ -1,10 +1,11 @@
 <?php
-
+/* Ukljuxivanje fajla knjige1.inc koji sadrzi deklaraciju objekta Knjiga */
 require("knjiga1.inc");
 
 
 chmod("knjige3.xml",0755);
 
+/* U drugom prolasku kroz simplexml parser izdvajaju se polja naslova, izdanja, podaci o izdavacu, i autori. Tako se formira niz objekata tipa Knjiga */
 $xml3 = simplexml_load_file("knjige3.xml") or die("Ne mogu da otvorim knjige3.xml za parsiranje.");
 
         
@@ -64,18 +65,22 @@ $n=0;
 
        }
      }
-
+/* Dodavanje novog naslova u niz */
      $knjige[]=new Knjiga($naslov, $izd, $izdsed,$izdnaziv, $izdgod,$a1,$a2);
      $n++;
     }
+/* uporedjivanje po godini izdanja. Ovde je legitimno koristiti poredjenje stringova zbog mogucnosti pojave "nesigurnih" podataka u uglastim zagradama.  */
      function cmp($a, $b)
      {
       return strcmp($a->getGodina_izdavanja(), $b->getGodina_izdavanja());
      }
+/* Sortiramo niz objekata tipa Knjiga po godini izdanja. */
      usort($knjige, "cmp");
+/* uvodimo zaglavlja za word dokument koji ce biti generisan */
      header("Content-type: application/vnd.ms-word");
      header("Content-Disposition: attachment;Filename=bibliography.docx");
      header("Content-Type: text/html; charset=utf-8");
+/*Generisemo dokument. */
      echo "<html>\n";  
      echo "<head><title>Bibliografija</title></head>\n"; 
      echo "<body>\n";
