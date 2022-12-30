@@ -1,11 +1,11 @@
 <?php
 
-
+/* Ukljucujemo definiciju objekta knjiga, */
 require("knjiga2.inc");
 
 
 chmod("knjige3.xml",0755);
-
+/* U drugom prolasku kroz simplexml parser, izdvajaju se polja, koja smestamo u objekat, cime generisemo niz objekata tipa knjiga */
 $xml3 = simplexml_load_file("knjige3.xml") or die("Ne mogu da otvorim knjige3.xml za parsiranje.");
         
 $knjige=array(); 
@@ -51,7 +51,6 @@ $n=0;
             $mater .= " + " . $polje;
             break;
          case "p700a" :
-          
             $a1=$polje;
             break;
          case "p700b" :
@@ -61,11 +60,9 @@ $n=0;
             $a1=$auti . " " . $autp;
             break;
          case "p701a" :
-           //$p701a++;
            $prezime=$polje;
            break;
          case "p701b" :
-           // $p701b++;
             $auti=$polje;
             $autp=$prezime;
             $a2 .= ", " . $auti . " " . $autp;
@@ -109,14 +106,14 @@ $n=0;
      $knjige[]=new Knjiga($odrednica,$naslov, $izd, $izdsed,$izdnaziv, $izdgod,$a1,$a2,$mater, $izdcel, $napomene, $isbn, $inv);
      $n++;
     }
-
+/* sortiranje po naslovu */ 
      function cmp($a, $b)
      {
       return strcmp($a->getNaslov(), $b->getNaslov());
      }
      usort($knjige, "cmp");
 
- 
+ /*generisanje html tabele.*/
      header("Content-Type: text/html; charset=utf-8");
      echo "<html>\n";  
      echo "<head><title>Izvestaj</title></head>\n"; 
