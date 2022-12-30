@@ -9,12 +9,16 @@ chmod("knjige3.xml",0755);
 odrednica
 naslov,
 autori, 
+izdanje,
+podaci o izdavacu, 
+materijalni opis,
+podaci o izdavackoj celini, 
 $xml3 = simplexml_load_file("knjige3.xml") or die("Ne mogu da otvorim knjige3.xml za parsiranje.");
         
 $knjige=array(); 
 $n=0;
   foreach($xml3->children() as $zapisi){
-    $naslov="";$izd="";$izdsed="";$izdnaziv=""; $izdgod="";$a1="";$a2="";$odrednica="";$mater="";$izdcel="";$sifzapisa="";$napomene="";$isbn=""; $inv="";
+    $naslov="";$izd="";$izdsed="";$izdnaziv=""; $izdgod="";$a1="";$a2="";$odrednica="";$mater="";$izdcel="";$napomene="";$isbn=""; $inv="";
     foreach($zapisi->children() as $polja){
        $p701a=0;$p701b=0; 
        $ozn_polje=$polja->getName();
@@ -130,7 +134,8 @@ $n=0;
      echo "<ol>";
      for($i=0;$i<$n;$i++){ 
      echo "<li>";/*echo "<br>";*/  $str=$knjige[$i]->getOdrednica(); echo $str; echo '<br>';
-     echo "&nbsp";echo "&nbsp";echo "&nbsp";echo "&nbsp"; $str=$knjige[$i]->getNaslov();  echo $str; echo " / "; $str=$knjige[$i]->getAutor1(); echo $str; $str=$knjige[$i]->getAutor2(); if ($str!=""){echo ", "  $str=$knjige[$i]->getAutor2(); echo $str;  
+     echo "&nbsp";echo "&nbsp";echo "&nbsp";echo "&nbsp"; $str=$knjige[$i]->getNaslov();  echo $str; echo " / "; $str=$knjige[$i]->getAutor1(); echo $str; 
+$str=$knjige[$i]->getAutor2(); echo $str;  
      $str=$knjige[$i]->getIzdanje();
      if ($str !== "") 
        echo ". - " . $str;
