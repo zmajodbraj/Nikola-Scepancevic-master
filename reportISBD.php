@@ -13,6 +13,10 @@ izdanje,
 podaci o izdavacu, 
 materijalni opis,
 podaci o izdavackoj celini, 
+napomene,
+ISBN broj, 
+i inventarski broj; 
+tako se formira niz objekata tipa knjiga. */
 $xml3 = simplexml_load_file("knjige3.xml") or die("Ne mogu da otvorim knjige3.xml za parsiranje.");
         
 $knjige=array(); 
@@ -118,7 +122,7 @@ $n=0;
      $knjige[]=new Knjiga($odrednica,$naslov, $izd, $izdsed,$izdnaziv, $izdgod,$a1,$a2,$mater, $izdcel, $napomene, $isbn, $inv);
      $n++;
     }
-
+/* Sortiranje u alfabetskom poretku po odrednici. */
      function cmp($a, $b)
      {
       return strcmp($a->getOdrednica(), $b->getOdrednica());
@@ -133,7 +137,7 @@ $n=0;
      echo "<p align=\"center\">Izveštaj ISBD</p>";   
      echo "<ol>";
      for($i=0;$i<$n;$i++){ 
-     echo "<li>";/*echo "<br>";*/  $str=$knjige[$i]->getOdrednica(); echo $str; echo '<br>';
+     echo "<li>"; $str=$knjige[$i]->getOdrednica(); echo $str; echo '<br>';
      echo "&nbsp";echo "&nbsp";echo "&nbsp";echo "&nbsp"; $str=$knjige[$i]->getNaslov();  echo $str; echo " / "; $str=$knjige[$i]->getAutor1(); echo $str; 
 $str=$knjige[$i]->getAutor2(); echo $str;  
      $str=$knjige[$i]->getIzdanje();
