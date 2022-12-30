@@ -1,10 +1,14 @@
 <?php
-
+/* Ukljucimo fajl sa definicijom objkta; za razliku od formata bibliografija, izvestaj ISBD je obimniji */
 require("knjiga2.inc");
 
 
 chmod("knjige3.xml",0755);
 
+/*U drugom prolazu kroz simplexml parser, izdvajaju se polja za sve elemente bibliografskog opisa:
+odrednica
+naslov,
+autori, 
 $xml3 = simplexml_load_file("knjige3.xml") or die("Ne mogu da otvorim knjige3.xml za parsiranje.");
         
 $knjige=array(); 
@@ -126,7 +130,7 @@ $n=0;
      echo "<ol>";
      for($i=0;$i<$n;$i++){ 
      echo "<li>";/*echo "<br>";*/  $str=$knjige[$i]->getOdrednica(); echo $str; echo '<br>';
-     echo "&nbsp";echo "&nbsp";echo "&nbsp";echo "&nbsp"; $str=$knjige[$i]->getNaslov();  echo $str; echo " / "; $str=$knjige[$i]->getAutor1(); echo $str;  $str=$knjige[$i]->getAutor2(); echo $str;  
+     echo "&nbsp";echo "&nbsp";echo "&nbsp";echo "&nbsp"; $str=$knjige[$i]->getNaslov();  echo $str; echo " / "; $str=$knjige[$i]->getAutor1(); echo $str; $str=$knjige[$i]->getAutor2(); if ($str!=""){echo ", "  $str=$knjige[$i]->getAutor2(); echo $str;  
      $str=$knjige[$i]->getIzdanje();
      if ($str !== "") 
        echo ". - " . $str;
