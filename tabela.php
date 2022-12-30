@@ -11,7 +11,7 @@ $xml3 = simplexml_load_file("knjige3.xml") or die("Ne mogu da otvorim knjige3.xm
 $knjige=array(); 
 $n=0;
   foreach($xml3->children() as $zapisi){
-    $naslov="";$izd="";$izdsed="";$izdnaziv=""; $izdgod="";$a1="";$a2="";$odrednica="";$mater="";$izdcel="";$sifzapisa="";$napomene="";$isbn=""; $inv="";
+    $naslov="";$izd="";$izdsed="";$izdnaziv=""; $izdgod="";$a1="";$a2="";$odrednica="";$mater="";$izdcel="";$napomene="";$isbn=""; $inv="";
     foreach($zapisi->children() as $polja){
        $p701a=0;$p701b=0; 
        $ozn_polje=$polja->getName();
