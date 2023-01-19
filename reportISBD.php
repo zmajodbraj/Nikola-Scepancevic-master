@@ -128,6 +128,9 @@ $n=0;
       return strcmp($a->getOdrednica(), $b->getOdrednica());
      }
      usort($knjige, "cmp");
+
+/* Formiranje word dokumenta u ISBD formatu */
+
      header("Content-type: application/vnd.ms-word");
      header("Content-Disposition: attachment;Filename=reportISBD.docx");
      header("Content-Type: text/html; charset=utf-8");
