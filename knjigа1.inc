@@ -8,7 +8,7 @@ class Knjiga{
 	public $naziv_izdavac;
 	public $godina_izdavanja;
         public $materijalnipodaci;
-	public function __construct($nasl,$izd1,$publcity, $publname, $publyear,$aut1,$aut2){
+	public function __construct($nasl,$izd1,$publcity, $publname, $publyear,$aut1,$aut2,$matpodaci){
 	  $this->glNaslov=$nasl;
 	  $this->izdanje=$izd1;
 	  $this->mesto_izdavac=$publcity; 
@@ -16,6 +16,7 @@ class Knjiga{
 	  $this->godina_izdavanja=$publyear;
 	  $this->autor1=$aut1;
 	  $this->autor2=$aut2;
+	  $this->materijalnipodaci=$matpodaci;	
 	}
 	public function getNaslov(){
 	  return $this->glNaslov;
@@ -37,6 +38,9 @@ class Knjiga{
 	}
 	public function getAutor2(){
 	  return $this->autor2;
+	}
+	public function getMaterijalniopis(){
+	  return $this->materijalnipodaci;
 	}
 } 
 ?>
