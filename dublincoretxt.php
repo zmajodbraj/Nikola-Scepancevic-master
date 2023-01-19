@@ -1,7 +1,7 @@
 <?php
 
 chmod("knjige3.xml",0755);
-
+/*  Drugi prolazak kroz simple xml parser */
 $xml3 = simplexml_load_file("knjige3.xml") or die("Ne mogu da otvorim knjige3.xml za parsiranje.");
 if(file_exists('dublincore.xml')) unlink('dublincore.xml');
 $myfile=fopen("dublincore.xml", "w") or die("Ne mogu da otvorim dublincore.xml za upis");
@@ -9,18 +9,15 @@ fwrite($myfile,$hdr);
 $str="<records>\n";          
 fwrite($myfile, $str);
   foreach($xml3->children() as $zapisi){
-    $naslov="";$izd="";$izdsed="";$izdnaziv=""; $izdgod="";$a1="";$a2="";$odrednica="";$mater="";$izdcel="";$sifzapisa="";$napomene="";$isbn=""; $inv="";
+	  /*izdvajaju se podaci o naslovu, izdanju, izdavanju, autorima, i materijalnom opisu. */ 
+    $naslov="";$izd="";$izdsed="";$izdnaziv=""; $izdgod="";$a1="";$a2="";$mater="";$strcont1="";$strcont2="";
     $str="  <record>\n";
     fwrite($myfile, $str);
-    $strcont="";
     foreach($zapisi->children() as $polja){
-       $p701a=0;$p701b=0; 
        $ozn_polje=$polja->getName();
        $polje=$polja;
-//       echo $ozn_polje . " " . $polje . "<br>";
        switch ($ozn_polje){
          case "p200a" :
-           $odrednica=$polje;
            $naslov=$polje;
            break;
          case "p200d" :
@@ -54,62 +51,41 @@ fwrite($myfile, $str);
             $mater .= " + " . $polje;
             break;
          case "p700a" :
-            $odrednica=$polje;
             $a1=$polje;
             break;
          case "p700b" :
-            $odrednica .= ", " . $polje;
             $auti=$polje;
             $autp=$a1;
             $a1=$auti . " " . $autp;
-            $strcont="    <dc_contributor>" . $a1 . "</dc_contributor>\n";
+            $strcont1="    <dc_contributor>" . $a1 . "</dc_contributor>\n";
             break;
          case "p701a" :
-           //$p701a++;
+         
            $prezime=$polje;
            break;
          case "p701b" :
-           // $p701b++;
             $auti=$polje;
             $autp=$prezime;
-            $strcont .= "    <dc_contributor>" . $auti . " " . $autp . "</dc_contributor>\n";
+            $strcont2 .= "    <dc_contributor>" . $auti . " " . $autp . "</dc_contributor>\n";
             break;
          case "p710a" :
-            $odrednica=$polje;
             $a1=$polje;
             break;
          case "p710d" :
-            $odrednica .= " (" . $polje;
+            $a1 .= " (" . $polje;
             break;
          case "p710f" :
-            $odrednica .= " ; " . $polje;
+            $a1 .= " ; " . $polje;
             break;
          case "p710e" :
-            $odrednica .= " ; " . $polje . ")";
-            break;
-         case "p225a" :
-            $izdcel= $polje;
-            break;
-	 case "p225v" : 
-            $izdcel .= " ; " . $polje;
-	    break;
-         case "p327a" :
-            $napomene .= $polje;
-            $napomene .= ". ";
-            break;
-         case "p010a" :
-            $isbn= $polje;
-            break;
-         case "p995f" :
-            $inv .=$polje;
-            break;
-         case "p995k" :
-            $inv .= "=" . $polje . " <br> ";
+            $a1 .= " ; " . $polje . ")";
+            $strcont1 .= $a1;
             break;
          default :
         
         }
        }
+	  
        $str="    <dc_creator>Nikola Scepancevic, Miljana Todorovic, Snezana Colakovic</dc_creator>\n";
        fwrite($myfile, $str);
        $str1=date("d.m.Y");		
@@ -117,7 +93,8 @@ fwrite($myfile, $str);
        fwrite($myfile, $str);
        $str="    <dc_publisher>" . $izdsed . " : " . $izdnaziv . ", " . $izdgod . "</dc_publisher>\n";
        fwrite($myfile, $str);
-       fwrite($myfile, $strcont);
+       fwrite($myfile, $strcont1);
+       fwrite($nyfule, $strcont2);
        $str="    <dc_format>" . $mater . "</dc_format>\n";
        fwrite($myfile, $str);
        $str="    <dc_type>Text </dc_type>\n";
