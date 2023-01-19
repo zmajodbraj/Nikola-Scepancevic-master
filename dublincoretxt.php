@@ -85,7 +85,7 @@ fwrite($myfile, $str);
         
         }
        }
-	  
+	  /* formira se Dublin core format  */
        $str="    <dc_creator>Nikola Scepancevic, Miljana Todorovic, Snezana Colakovic</dc_creator>\n";
        fwrite($myfile, $str);
        $str1=date("d.m.Y");		
