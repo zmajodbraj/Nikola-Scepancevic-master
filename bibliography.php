@@ -12,7 +12,7 @@ $xml3 = simplexml_load_file("knjige3.xml") or die("Ne mogu da otvorim knjige3.xm
 $knjige=array(); 
 $n=0;
   foreach($xml3->children() as $zapisi){
-    $naslov="";$izd="";$izdsed="";$izdnaziv=""; $izdgod="";$a1="";$a2="";
+    $naslov="";$izd="";$izdsed="";$izdnaziv=""; $izdgod="";$a1="";$a2="";$matopis="";
     foreach($zapisi->children() as $polja){
        $p701a=0;$p701b=0; 
        $ozn_polje=$polja->getName();
@@ -40,6 +40,18 @@ $n=0;
          case "p210d" :
             $izdgod=$polje;
             break;
+         case "p215a" :
+            $matopis=$polje;
+            break;
+         case "p215c" :
+            $matopis .= " : " . $polje;
+            break;
+         case "p215d" :
+            $matopis .= " ; " . $polje;
+            break;
+         case "p215e" :
+            $matopis .= " + " . $polje;
+            break;                    
          case "p700a" :
             $a1=$polje;
             break;
@@ -66,7 +78,7 @@ $n=0;
        }
      }
 /* Dodavanje novog naslova u niz */
-     $knjige[]=new Knjiga($naslov, $izd, $izdsed,$izdnaziv, $izdgod,$a1,$a2);
+     $knjige []=new Knjiga($naslov, $izd, $izdsed,$izdnaziv, $izdgod,$a1,$a2,$matopis);
      $n++;
     }
 /* uporedjivanje po godini izdanja. Ovde je legitimno koristiti poredjenje stringova zbog mogucnosti pojave "nesigurnih" podataka u uglastim zagradama.  */
@@ -96,6 +108,9 @@ $n=0;
      echo ". - "; $str=$knjige[$i]->getMesto_izdavac(); echo $str;
      echo " : "; $str=$knjige[$i]->getNaziv_izdavac(); echo $str;
      echo ", "; $str=$knjige[$i]->getGodina_izdavanja(); echo $str; 
+     $str=knjige[$i]->getMaterijalniopis(); 
+     if(str!=="") 
+           echo ". - " . $str;       
      echo "</li>\n"; 
      }     
     echo "</ol>\n";  
