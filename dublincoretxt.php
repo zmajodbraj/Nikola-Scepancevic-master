@@ -57,7 +57,7 @@ fwrite($myfile, $str);
             $auti=$polje;
             $autp=$a1;
             $a1=$auti . " " . $autp;
-            $strcont1="    <dc_contributor>" . $a1 . "</dc_contributor>\n";
+            $strcont1="    <dc_author>" . $a1 . "</dc_author>\n";
             break;
          case "p701a" :
          
@@ -66,7 +66,7 @@ fwrite($myfile, $str);
          case "p701b" :
             $auti=$polje;
             $autp=$prezime;
-            $strcont2 .= "    <dc_contributor>" . $auti . " " . $autp . "</dc_contributor>\n";
+            $strcont2 .= "    <dc_author>" . $auti . " " . $autp . "</dc_author>\n";
             break;
          case "p710a" :
             $a1=$polje;
@@ -86,7 +86,7 @@ fwrite($myfile, $str);
         }
        }
 	  /* formira se Dublin core format  */
-       $str="    <dc_creator>Nikola Scepancevic, Miljana Todorovic, Snezana Colakovic</dc_creator>\n";
+       $str="    <dc_creator>Nikola Scepancevicc_creator>\n";
        fwrite($myfile, $str);
        $str1=date("d.m.Y");		
        $str="    <dc_date>" . $str1 . ". </dc_date>\n";
