@@ -10,7 +10,7 @@ $str="<records>\n";
 fwrite($myfile, $str);
   foreach($xml3->children() as $zapisi){
 	  /*izdvajaju se podaci o naslovu, izdanju, izdavanju, autorima, i materijalnom opisu. */ 
-    $naslov="";$izd="";$izdsed="";$izdnaziv=""; $izdgod="";$a1="";$a2="";$mater="";$strcont1="";$strcont2="";
+    $naslov="";$izd="";$izdsed="";$izdnaziv=""; $izdgod="";$a1="";$a2="";$matopis="";$strcont1="";$strcont2="";
     $str="  <record>\n";
     fwrite($myfile, $str);
     foreach($zapisi->children() as $polja){
@@ -39,13 +39,13 @@ fwrite($myfile, $str);
             $izdgod=$polje;
             break;
          case "p215a" :
-            $mater=$polje;
+            $matopis=$polje;
             break;
          case "p215c" :
-            $mater .= " : " . $polje;
+            $matopis .= " : " . $polje;
             break;
          case "p215d" :
-            $mater .= " ; " . $polje;
+            $matopis .= " ; " . $polje;
             break;
          case "p215e" :
             $mater .= " + " . $polje;
@@ -95,7 +95,7 @@ fwrite($myfile, $str);
        fwrite($myfile, $str);
        fwrite($myfile, $strcont1);
        fwrite($nyfule, $strcont2);
-       $str="    <dc_format>" . $mater . "</dc_format>\n";
+       $str="    <dc_format>" . $matopis . "</dc_format>\n";
        fwrite($myfile, $str);
        $str="    <dc_type>Text </dc_type>\n";
        fwrite($myfile, $str);
