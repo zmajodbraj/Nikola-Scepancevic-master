@@ -1,12 +1,11 @@
 <?php
-/* Ukljuxivanje fajla knjige1.inc koji sadrzi deklaraciju objekta Knjiga */
+session_start();
+/* Ukljucivanje fajla knjige1.inc koji sadrzi deklaraciju objekta Knjiga */
 require("knjiga1.inc");
 
-
-chmod("knjige3.xml",0755);
-
+$knjige3=$_SESSION["MyVar"];//dodelimo stringu knjige3 vrednost promenljive $_SESSION
 /* U drugom prolasku kroz simplexml parser izdvajaju se polja naslova, izdanja, podaci o izdavacu, i autori. Tako se formira niz objekata tipa Knjiga */
-$xml3 = simplexml_load_file("knjige3.xml") or die("Ne mogu da otvorim knjige3.xml za parsiranje.");
+$xml3 = simplexml_load_string($knjige3) or die("Ne mogu da otvorim string knjige3 za parsiranje.");
 
         
 $knjige=array(); 
@@ -116,4 +115,6 @@ $n=0;
     echo "</ol>\n";  
     echo "</body>\n";
     echo "</html>";
+   session_unset($_SESSION["MyVar"]); //oslobodimo promenljivu session
+   session_destroy(); //oslobodimo sesiju
 ?>
