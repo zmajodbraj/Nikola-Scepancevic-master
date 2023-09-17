@@ -1,36 +1,34 @@
 <?php
-  $uploadOK=1; //indikator ispravnosti uploadovanja
+ session_start(); 
+ $uploadOK=0; //indikator ispravnosti uploadovanja
   $ime_formata=$_POST['format'];//promenljva u koju se smesta izabrani format u html formularu
   if(!empty($_FILES['uploaded_file']))//procedura uploadovanja
   {
     $path = "/var/www/html/";
-    $path = $path . basename($_FILES['uploaded_file']['name']);
-    if(move_uploaded_file($_FILES['uploaded_file']['tmp_name'], $path)) {
+    $filename = $path . basename($_FILES['uploaded_file']['name']);
+    if(move_uploaded_file($_FILES['uploaded_file']['tmp_name'], $filename)) {
     $uploadOK=1;
     } else{
        $uploadOK=0;
     }
   }
+  
+  if(file_exists('knjige.xml')) unlink('knjige.xml');//obrisemo trenutni fajl da bismo kreirali novi imenovan knjige.xml.
+  chmod($filename,0755);
+  rename($filename, 'knjige.xml');//preimenujemo uploadovan fajl u knjige.xml
+  ini_set('memory_limit', '1024M');//postavljamo memorisjko ogranicenje za robusnije xml fajlove
+ $xml = simplexml_load_file("knjige.xml") or die("Ne mogu da otvorim knjige.xml za parsiranje.");//pokusavamo da rasclanimo xml fajl
+  
+$buffer="";//inicijalizujemo bafer u koji cemo pisati
 
-  if(file_exists('knjige.xml')) unlink('knjige.xml'); //obrisemo trenutni fajl da bismo kreirali novi imenovan knjige.xml.
-  chmod($path,0755);
-  rename($path, 'knjige.xml');//preimenujemo uploadovan fajl u knjige.xml. 
-  ini_set('memory_limit', '1024M');//za robusnije xml fajlove postavimo memorijsko ogranicenje
-  $xml = simplexml_load_file("knjige.xml") or die("Ne mogu da otvorim knjige.xml za parsiranje.");//prvi prolaz kroz parser, spajanje etiketa sa f(polja) i s(potpolja) oznakama
-if(file_exists('knjige3.xml')) unlink('knjige3.xml');
+$hdr="<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n"; 
+$buffer.=$hdr;//najpre smestamo zaglavlje xml dokumenta u bafer
 
-$myfile=fopen("knjige3.xml", "w") or die("Ne mogu da otvorim fajl knjige3.xml za pisanje.");//otvaranje fajla za smestaanje spojenih polja i potpolja. 
-
-$hdr="<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n"; //standardno zaglavlje xml fajla, upisuje se u fajl...
-fwrite($myfile, $hdr);
-
-$tag1b="<zapisi>\n";
-fwrite($myfile, $tag1b);
+$tag1b="<zapisi>\n"; $buffer.=$tag1b;
 
 
   foreach ($xml->children() as $notices){
-    $tag2b="<zapis>\n"; 
-    fwrite($myfile, $tag2b);
+    $tag2b="<zapis>\n"; $buffer.=$tag2b;
 
      foreach($notices->children() as $filds){
        $fild=$filds['c'];
@@ -43,18 +41,19 @@ fwrite($myfile, $tag1b);
 
              $tag_e="</p" . $fild . $subfild . ">\n";
              $text= "  " . $tag_b . $subfild1 . $tag_e; 
-             fwrite($myfile, $text);
+            $buffer.=$text;//smestamo spojene f(polja) i s(potpolja) sa vrednostima potpolja u bafer 
          }
       }
       $tag2e="</zapis>\n";
-
-      fwrite($myfile,$tag2e);
+      $buffer.=$tag2e;//zatvaramo otvorene tagove za nivo pojedincacnog zapisa
      
   }      
-$tag1e="</zapisi>\n";
-fwrite($myfile, $tag1e);
-fclose($myfile);
-//U zavisnosti od izabranog formata izvrsava se odgovarajuca procedura 
+$tag1e="</zapisi>\n";$buffer.=$tag1e;//zatvaramo otvoreni tag za skup svih zapisa. 
+
+
+$_SESSION["MyVar"]=$buffer; //dodelimo \$\_SESSION promenljivi vrednost bafera
+
+//u zavisnosti od izabranog formata pozivamo odgovarajuci skript.
   switch($ime_formata){
    case 1:  
      if ($uploadOK==1){
@@ -84,4 +83,5 @@ fclose($myfile);
       else { echo "Neuspesan pokusaj uploadovanja!";}
       break;
   }
+  
 ?>
