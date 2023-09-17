@@ -10,8 +10,8 @@ de=fopen("RADNI5.txt", "w");
 
 while ((c=fgetc(so))!=EOF){
 switch(c){
-case 131 : fputs("&#226;",de);break;
-case 182 : fputs("&#194;",de);break;
+case 160 : fputs("&#225;",de);break;
+case 181 : fputs("&#193;",de);break;
 case 130 : fputs("&#233;",de);break;
 case 144 : fputs("&#201;",de);break;
 case 129 : fputs("&#252;",de);break;
