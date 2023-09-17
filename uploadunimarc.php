@@ -1,7 +1,7 @@
 <?php
  session_start(); 
  $uploadOK=0; //indikator ispravnosti uploadovanja
-  $ime_formata=$_POST['format'];//promenljva u koju se smesta izabrani format u html formularu
+  $ime_formata=$_POST['format'];//promenljva u koju se smesta izabrani format iz html formulara
   if(!empty($_FILES['uploaded_file']))//procedura uploadovanja
   {
     $path = "/var/www/html/";
