@@ -1,9 +1,10 @@
 <?php
-/* Ukljucimo fajl sa definicijom objkta; za razliku od formata bibliografija, izvestaj ISBD je obimniji */
+//zapocnemo sesiju 
+session_start();
+/* Ukljucimo fajl sa definicijom objekta; za razliku od formata bibliografija, izvestaj ISBD je obimniji */
 require("knjiga2.inc");
-
-
-chmod("knjige3.xml",0755);
+//prenosimo sadrzaj bafera iz prethodnog koraka 
+$knjige3=$_SESSION["MyVar"]; 
 
 /*U drugom prolazu kroz simplexml parser, izdvajaju se polja za sve elemente bibliografskog opisa:
 odrednica
@@ -17,7 +18,7 @@ napomene,
 ISBN broj, 
 i inventarski broj; 
 tako se formira niz objekata tipa knjiga. */
-$xml3 = simplexml_load_file("knjige3.xml") or die("Ne mogu da otvorim knjige3.xml za parsiranje.");
+$xml3 = simplexml_load_string($knjige3) or die("Ne mogu da otvorim string knjige3 za parsiranje.");
         
 $knjige=array(); 
 $n=0;
@@ -122,7 +123,7 @@ $n=0;
      $knjige[]=new Knjiga($odrednica,$naslov, $izd, $izdsed,$izdnaziv, $izdgod,$a1,$a2,$mater, $izdcel, $napomene, $isbn, $inv);
      $n++;
     }
-/* Sortiranje u alfabetskom poretku po odrednici. */
+/* Sortiranje u alfabetskom poretku po odrednici. */-
      function cmp($a, $b)
      {
       return strcmp($a->getOdrednica(), $b->getOdrednica());
@@ -172,4 +173,6 @@ $str=$knjige[$i]->getAutor2(); echo $str;
     echo "</ol>";  
     echo "</body>";
     echo "</html>";
+    session_unset($_SESSION["MyVar"]);//oslobodimo promenljivu $_SESSION,
+    session_destroy();//uklonimo sesiju. 
 ?>
