@@ -78,7 +78,7 @@ $sadrzaj.=$str; //dodamo otvoreni tag za sve zapise
             break;
          case "p710e" :
             $a1 .= " ; " . $polje . ")";
-            $strcont3 .= $a1;
+            $strcont1 .= "    <dc_author>" . $a1 . "</dc_author>\n" ;
             break;
          default :
         
