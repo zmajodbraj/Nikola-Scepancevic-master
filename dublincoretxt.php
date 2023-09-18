@@ -1,18 +1,18 @@
 <?php
-
-chmod("knjige3.xml",0755);
+$sadrzaj="";
+$knjige3=$_SESSION["MyVar"];	
 /*  Drugi prolazak kroz simple xml parser */
-$xml3 = simplexml_load_file("knjige3.xml") or die("Ne mogu da otvorim knjige3.xml za parsiranje.");
-if(file_exists('dublincore.xml')) unlink('dublincore.xml');
-$myfile=fopen("dublincore.xml", "w") or die("Ne mogu da otvorim dublincore.xml za upis");
-fwrite($myfile,$hdr);
+$xml3 = simplexml_load_string($knjige3) or die("Ne mogu da otvorim string knjige3 za parsiranje.");
+$hdr='<?xml version="1.0" encoding="utf-8" ?>\n';
+$sadrzaj.=$hdr; //dodajemo zaglavlje xml fajla
+
 $str="<records>\n";          
-fwrite($myfile, $str);
-  foreach($xml3->children() as $zapisi){
+$sadrzaj.=$str; //dodamo otvoreni tag za sve zapise
+       foreach($xml3->children() as $zapisi){
 	  /*izdvajaju se podaci o naslovu, izdanju, izdavanju, autorima, i materijalnom opisu. */ 
     $naslov="";$izd="";$izdsed="";$izdnaziv=""; $izdgod="";$a1="";$a2="";$matopis="";$strcont1="";$strcont2="";
     $str="  <record>\n";
-    fwrite($myfile, $str);
+    $sadrzaj.=$str; //dodamo otvoreni tag za svaki pojedinacni zapis
     foreach($zapisi->children() as $polja){
        $ozn_polje=$polja->getName();
        $polje=$polja;
@@ -60,8 +60,7 @@ fwrite($myfile, $str);
             $strcont1="    <dc_author>" . $a1 . "</dc_author>\n";
             break;
          case "p701a" :
-         
-           $prezime=$polje;
+            $prezime=$polje;
            break;
          case "p701b" :
             $auti=$polje;
@@ -79,46 +78,39 @@ fwrite($myfile, $str);
             break;
          case "p710e" :
             $a1 .= " ; " . $polje . ")";
-            $strcont1 .= $a1;
+            $strcont3 .= $a1;
             break;
          default :
         
         }
        }
 	  /* formira se Dublin core format  */
-       $str="    <dc_creator>Nikola Scepancevicc_creator>\n";
-       fwrite($myfile, $str);
+       $str="    <dc_creator>Bibloteka Matematickog fakulteta</dc_creator>\n";
+       $sadrzaj.=$str;
        $str1=date("d.m.Y");		
        $str="    <dc_date>" . $str1 . ". </dc_date>\n";
-       fwrite($myfile, $str);
+       $sadrzaj.=$str;
        $str="    <dc_publisher>" . $izdsed . " : " . $izdnaziv . ", " . $izdgod . "</dc_publisher>\n";
-       fwrite($myfile, $str);
-       fwrite($myfile, $strcont1);
-       fwrite($nyfule, $strcont2);
+       $sadrzaj.=$str;
+       $sadrzaj.=$strcont1;
+       $sadrzaj.=$strcont2;
        $str="    <dc_format>" . $matopis . "</dc_format>\n";
-       fwrite($myfile, $str);
+       $sadrzaj.=$str;
        $str="    <dc_type>Text </dc_type>\n";
-       fwrite($myfile, $str);
+       $sadrzaj.=$str);
        $str="    <dc_title>" . $naslov . "</dc_title>\n";
-       fwrite($myfile, $str);
+       $sadrzaj.=$str;
        $str="    <dc_subject></dc_subject>\n";
-       fwrite($myfile, $str); 
+       $sadrzaj.=$str; 
        $str="    <dc_description></dc_description>\n";
-       fwrite($myfile, $str);
+       $sadrzaj.=$str;
        $str="  </record>\n";
-       fwrite($myfile, $str);
+       $sadrzaj.=$str;
 
      }
      $str="</records>\n";
-     fwrite($myfile, $str);
-     fclose($myfile);
-     $str="";
-     $myfile=fopen("dublincore.xml", "r");
-     while(!feof($myfile)){
-        $str .= fgetc($myfile);
-     }
-     fclose($myfile);
+     $sadrzaj.=$str;
      header('Content-disposition: attachment; filename=dublincore.xml');
      header ("Content-Type:  text/xml");
-     echo $str;
+     echo $sadrzaj;
 ?>
