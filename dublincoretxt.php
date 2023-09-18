@@ -1,4 +1,5 @@
 <?php
+session_start();
 $sadrzaj="";
 $knjige3=$_SESSION["MyVar"];	
 /*  Drugi prolazak kroz simple xml parser */
@@ -105,12 +106,15 @@ $sadrzaj.=$str; //dodamo otvoreni tag za sve zapise
        $str="    <dc_description></dc_description>\n";
        $sadrzaj.=$str;
        $str="  </record>\n";
-       $sadrzaj.=$str;
+       $sadrzaj.=$str; // dodamo zatvoreni tag za svaki pojedinacni zapis,
 
      }
-     $str="</records>\n";
+     $str="</records>\n"; //dodamo zatvoreni tag za sve zapise
      $sadrzaj.=$str;
      header('Content-disposition: attachment; filename=dublincore.xml');
      header ("Content-Type:  text/xml");
      echo $sadrzaj;
+
+   session_unset($_SESSION["MyVal"]);//oslobadjamo $_SESSION promenljivu,
+   session_destroy(); //uklanjamo sesiju
 ?>
