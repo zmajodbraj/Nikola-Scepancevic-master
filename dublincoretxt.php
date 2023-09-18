@@ -84,7 +84,7 @@ $sadrzaj.=$str; //dodamo otvoreni tag za sve zapise
         
         }
        }
-	  /* formira se Dublin core format  */
+	  /* formira se Dublin core format  */ 
        $str="    <dc_creator>Bibloteka Matematickog fakulteta</dc_creator>\n";
        $sadrzaj.=$str;
        $str1=date("d.m.Y");		
