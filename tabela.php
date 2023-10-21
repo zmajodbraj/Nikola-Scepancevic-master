@@ -1,24 +1,28 @@
 <?php
+session_start();
 
-/* Ukljucujemo definiciju objekta knjiga, */
-require("knjiga2.inc");
+require('knjiga2.inc');
+require 'server/autoload.php';
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
-chmod("knjige3.xml",0755);
-/* U drugom prolasku kroz simplexml parser, izdvajaju se polja, koja smestamo u objekat, cime generisemo niz objekata tipa knjiga */
-$xml3 = simplexml_load_file("knjige3.xml") or die("Ne mogu da otvorim knjige3.xml za parsiranje.");
+$knjige3=$_SESSION["MyVar"];
+
+$xml3 = simplexml_load_string($knjige3) or die("Ne mogu da otvorim string knjige3 za parsiranje.");
         
 $knjige=array(); 
 $n=0;
   foreach($xml3->children() as $zapisi){
-    $naslov="";$izd="";$izdsed="";$izdnaziv=""; $izdgod="";$a1="";$a2="";$odrednica="";$mater="";$izdcel="";$napomene="";$isbn=""; $inv="";
+    $naslov="";$izd="";$izdsed="";$izdnaziv=""; $izdgod="";$a1="";$a2="";$odrednica="";$mater="";$izdcel="";$sifzapisa="";$napomene="";$isbn="";$inv="";
     foreach($zapisi->children() as $polja){
-       $p701a=0;$p701b=0; 
+       $p701a=0; $p701b=0; 
        $ozn_polje=$polja->getName();
        $polje=$polja;
        switch ($ozn_polje){
          case "p200a" :
           $naslov=$polje;
+          $odrednica=$polje;
            break;
          case "p200d" :
            $naslov .= " = " . $polje;
@@ -50,19 +54,21 @@ $n=0;
          case "p215e" :
             $mater .= " + " . $polje;
             break;
-         case "p700a" :
+         case "p700a" :          
             $a1=$polje;
             break;
          case "p700b" :
-            $odrednica .= ", " . $polje;
+            $odrednica = $a1 . ", " . $polje;
             $auti=$polje;
             $autp=$a1;
             $a1=$auti . " " . $autp;
             break;
          case "p701a" :
+           //$p701a++;
            $prezime=$polje;
            break;
          case "p701b" :
+           // $p701b++;
             $auti=$polje;
             $autp=$prezime;
             $a2 .= ", " . $auti . " " . $autp;
@@ -86,12 +92,15 @@ $n=0;
 	 case "p225v" : 
             $izdcel .= " ; " . $polje;
 	    break;
-/*         case "p327a" :
+        case "p300a" :
+            $sifrazapisa=$polje;
+            break;
+        case "p327a" :
             $napomene .= $polje;
             $napomene .= ". ";
-            break;*/
+            break;
          case "p010a" :
-            $isbn= $polje;
+            $isbn=$polje;
             break;
         case "p995f" :
             $inv .=$polje;
@@ -103,38 +112,43 @@ $n=0;
 
        }
      }
-     $knjige[]=new Knjiga($odrednica,$naslov, $izd, $izdsed,$izdnaziv, $izdgod,$a1,$a2,$mater, $izdcel, $napomene, $isbn, $inv);
+     $knjige[]=new Knjiga($odrednica,$naslov, $izd, $izdsed,$izdnaziv, $izdgod,$a1,$a2,$mater, $izdcel, $sifrazapisa, $napomene, $isbn, $inv);
      $n++;
     }
-/* sortiranje po naslovu */ 
+
      function cmp($a, $b)
      {
       return strcmp($a->getNaslov(), $b->getNaslov());
      }
      usort($knjige, "cmp");
+     $str="";
 
- /*generisanje html tabele.*/
-     header("Content-Type: text/html; charset=utf-8");
-     echo "<html>\n";  
-     echo "<head><title>Izvestaj</title></head>\n"; 
-     echo "<body>\n";
-     echo "<table>\n";
-echo "<tr><td>Naslov</td><td>Autor(i)</td><td>Izdanje</td><td>Mesto izdavanja</td><td>Izdavac</td><td>Godina izdavanja</td><td>Materijalni opis</td><td>Izdavacka celina</td><td>ISBN broj</td><td>Inv broj</td></tr><br>";
+     $str .= "<table>\n"; // zapocinjemo tabelu
+     $str .= "<tr><th>Naslov</th><th>Autor(i)</th><th>Izdanje</th><th>Mesto izdavanja</th><th>Izdavac</th><th>Godina izdavanja</th><th>Materijalni opis</th><th>Izdavacka celina</th><th>Sifra zapisa</th><th>Napomene</th><th>ISBN broj</th><th>Inv broj</th></tr>\n"; //dodajemo zaglavlje kolona
      for($i=0;$i<$n;$i++){ 
-     echo "<tr>";echo "<td>"; $str=$knjige[$i]->getNaslov();  echo $str; echo "</td><td>";  $str=$knjige[$i]->getAutor1(); echo $str;  $str=$knjige[$i]->getAutor2(); echo $str; echo "</td><td>"; 
-     $str=$knjige[$i]->getIzdanje();
- 
-       echo $str; echo "</td><td>";
-    $str=$knjige[$i]->getMesto_izdavac(); echo $str; echo "</td><td>";
-    $str=$knjige[$i]->getNaziv_izdavac(); echo $str;
-     echo "</td><td>"; $str=$knjige[$i]->getGodina_izdavanja(); echo $str; echo "</td><td>"; 
-     $str=$knjige[$i]->getMatopis(); 
-             echo $str;echo "</td><td>";
-     $str=$knjige[$i]->getIzdcelina();
-      echo $str; echo "</td><td>";        
-     $str2= $knjige[$i]->getISBN(); echo $str2; echo "</td>"; echo "<td>"; $str2=$knjige[$i]->getInvbr(); echo $str2; echo "</td>"; echo "</tr>\n"; 
+    $str .= "<tr>"; //zapocinjemo vrstu tabele
+    $str .= "<td>"; $str1=$knjige[$i]->getNaslov(); $str .= $str1; $str .= "</td>"; //uzimamo podatak o naslovu i smestamo ga u polje tabele 
+    $str .= "<td>"; $str1=$knjige[$i]->getAutor1(); $str .= $str1; $str1=$knjige[$i]->getAutor2(); $str .= $str1; $str .= "</td>"; //uzimamo podatke o autorima i smestamo ga u polje tabele 
+    $str .= "<td>"; $str1=$knjige[$i]->getIzdanje(); $str .= $str1;  $str .= "</td>"; //uzimamo podatak o izdanju i smestamo ga u polje tabele
+    $str .= "<td>"; $str1=$knjige[$i]->getMesto_izdavac(); $str .= $str1; $str .= "</td>"; //uzimamo podatak sediste izdavaca i smestamo ga u polje tabele
+    $str .= "<td>"; $str1=$knjige[$i]->getNaziv_izdavac(); $str .= $str1; $str .= "</td>"; //uzimamo podatak o nazivu izdavaca i smestamo ga u polje tabele
+    $str .= "<td>"; $str1=$knjige[$i]->getGodina_izdavanja(); $str .= $str1; $str .= "</td>"; //uzimamo podatak o godini izdavanja i smestamo ga u polje tabele
+    $str .= "<td>"; $str1=$knjige[$i]->getMatopis(); $str .= $str1; $str .= "</td>"; //uzimamo podatak o materijalnom opisu i smestamo ga u polje tabele
+    $str .= "<td>"; $str1=$knjige[$i]->getIzdcelina(); $str .= $str1; $str .= "</td>"; //uzimamo podatak o izdavackoj celini i smestamo ga u polje tabele
+    $str .= "<td>"; $str1=$knjige[$i]->getSifrazapisa(); $str .= $str1; $str .= "</td>"; //uzimamo podatak o sifri zapisa i smestamo ga u polje tabele  
+    $str .= "<td>"; $str1=$knjige[$i]->getNapomene(); $str .= $str1; $str .= "</td>"; //uzimamo podatak o napomenama i smestamo ga u polje tabele
+    $str .= "<td>"; $str1=$knjige[$i]->getISBN(); $str .= $str1; $str .= "</td>"; //uzimamo podatak o ISBN broju i smestamo ga u polje tabele
+    $str .= "<td>"; $str1=$knjige[$i]->getInvbr(); $str .= $str1; $str .= "</td>";//uzimamo podatak o inventarskim brojevima i smestamo ih u polje tabele
+    $str .= "</tr>\n"; //zavrsavamo vrstu
      }     
-    echo "</table>\n";  
-    echo "</body>\n";
-    echo "</html>\n";
+    $str .= "</table>\n"; //zavrsavamo tabelu
+  
+  $reader=new \PhpOffice\PhpSpreadsheet\Reader\Html();
+  $spreadsheet=$reader->loadFromString($str);//ucitavamo string koji smo generisali u prethodnim koracima
+
+  $writer=new \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
+  $writer->save('tabelarni_prikaz.xlsx');//generisemo izlazni fajl u formatu excel xlsx
+     
+  session_unset($_SESSION["MyVar"]);
+  session_destroy();
 ?>
