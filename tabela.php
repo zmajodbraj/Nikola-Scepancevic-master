@@ -2,10 +2,13 @@
 session_start();
 
 require('knjiga2.inc');
-require 'server/autoload.php';
+$path="/var/www/nikola/PhpSpreadSheet-main/AnyFolder"
 
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+require($path . '/autoload.php');
+
+use PhpOffice/PhpSpreadsheet/Worksheet;
+use PhpOffice/PhpSpreadsheet/Reader;
+use PhpOffice/PhpSpreadsheet/Writer/Xlsx;
 
 $knjige3=$_SESSION["MyVar"];
 
