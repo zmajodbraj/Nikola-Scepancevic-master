@@ -10,7 +10,7 @@ $xml3 = simplexml_load_string($knjige3) or die("Ne mogu da otvorim string knjige
 $knjige=array(); 
 $n=0;
   foreach($xml3->children() as $zapisi){
-    $naslov="";$izd="";$izdsed="";$izdnaziv=""; $izdgod="";$a1="";$a2="";$odrednica="";$mater="";$izdcel="";$sifzapisa="";$napomene="";$isbn="";$inv="";
+    $naslov="";$izd="";$izdsed="";$izdnaziv=""; $izdgod="";$a1="";$a2="";$odrednica="";$mater="";$izdcel="";$napomene="";$isbn="";$inv="";
     foreach($zapisi->children() as $polja){
        $p701a=0; $p701b=0; 
        $ozn_polje=$polja->getName();
@@ -88,9 +88,6 @@ $n=0;
 	 case "p225v" : 
             $izdcel .= " ; " . $polje;
 	    break;
-        case "p300a" :
-            $sifrazapisa=$polje;
-            break;
         case "p327a" :
             $napomene .= $polje;
             $napomene .= ". ";
@@ -108,7 +105,7 @@ $n=0;
 
        }
      }
-     $knjige[]=new Knjiga($odrednica,$naslov, $izd, $izdsed,$izdnaziv, $izdgod,$a1,$a2,$mater, $izdcel, $sifrazapisa, $napomene, $isbn, $inv);
+     $knjige[]=new Knjiga($odrednica,$naslov, $izd, $izdsed,$izdnaziv, $izdgod,$a1,$a2,$mater, $izdcel, $napomene, $isbn, $inv);
      $n++;
     }
 
@@ -135,7 +132,6 @@ $n=0;
     $str .= "<td>"; $str1=$knjige[$i]->getGodina_izdavanja(); $str .= $str1; $str .= "</td>"; //uzimamo podatak o godini izdavanja i smestamo ga u polje tabele
     $str .= "<td>"; $str1=$knjige[$i]->getMatopis(); $str .= $str1; $str .= "</td>"; //uzimamo podatak o materijalnom opisu i smestamo ga u polje tabele
     $str .= "<td>"; $str1=$knjige[$i]->getIzdcelina(); $str .= $str1; $str .= "</td>"; //uzimamo podatak o izdavackoj celini i smestamo ga u polje tabele
-    $str .= "<td>"; $str1=$knjige[$i]->getSifrazapisa(); $str .= $str1; $str .= "</td>"; //uzimamo podatak o sifri zapisa i smestamo ga u polje tabele  
     $str .= "<td>"; $str1=$knjige[$i]->getNapomene(); $str .= $str1; $str .= "</td>"; //uzimamo podatak o napomenama i smestamo ga u polje tabele
     $str .= "<td>"; $str1=$knjige[$i]->getISBN(); $str .= $str1; $str .= "</td>"; //uzimamo podatak o ISBN broju i smestamo ga u polje tabele
     $str .= "<td>"; $str1=$knjige[$i]->getInvbr(); $str .= $str1; $str .= "</td>";//uzimamo podatak o inventarskim brojevima i smestamo ih u polje tabele
