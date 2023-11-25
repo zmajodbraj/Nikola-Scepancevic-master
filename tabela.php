@@ -2,13 +2,6 @@
 session_start();
 
 require('knjiga2.inc');
-$path="/var/www/nikola/PhpSpreadSheet-main/AnyFolder"
-
-require($path . '/autoload.php');
-
-use PhpOffice/PhpSpreadsheet/Worksheet;
-use PhpOffice/PhpSpreadsheet/Reader;
-use PhpOffice/PhpSpreadsheet/Writer/Xlsx;
 
 $knjige3=$_SESSION["MyVar"];
 
@@ -125,8 +118,12 @@ $n=0;
      }
      usort($knjige, "cmp");
      $str="";
-
-     $str .= "<table>\n"; // zapocinjemo tabelu
+     $str="<html>\n";
+     $str.=" <head>\n";
+     $str.="  <title>Tabelarni prikaz</title>\n";
+     $str.=" </head>\n";
+     $str.=" <body>\n";
+     $str .= "  <table>\n"; // zapocinjemo tabelu
      $str .= "<tr><th>Naslov</th><th>Autor(i)</th><th>Izdanje</th><th>Mesto izdavanja</th><th>Izdavac</th><th>Godina izdavanja</th><th>Materijalni opis</th><th>Izdavacka celina</th><th>Sifra zapisa</th><th>Napomene</th><th>ISBN broj</th><th>Inv broj</th></tr>\n"; //dodajemo zaglavlje kolona
      for($i=0;$i<$n;$i++){ 
     $str .= "<tr>"; //zapocinjemo vrstu tabele
@@ -144,14 +141,11 @@ $n=0;
     $str .= "<td>"; $str1=$knjige[$i]->getInvbr(); $str .= $str1; $str .= "</td>";//uzimamo podatak o inventarskim brojevima i smestamo ih u polje tabele
     $str .= "</tr>\n"; //zavrsavamo vrstu
      }     
-    $str .= "</table>\n"; //zavrsavamo tabelu
-  
-  $reader=new \PhpOffice\PhpSpreadsheet\Reader\Html();
-  $spreadsheet=$reader->loadFromString($str);//ucitavamo string koji smo generisali u prethodnim koracima
+    $str .= "  </table>\n"; //zavrsavamo tabelu
+  $str.=" </body>\n";
+  $str.="</html>\n";
 
-  $writer=new \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
-  $writer->save('tabelarni_prikaz.xlsx');//generisemo izlazni fajl u formatu excel xlsx
-     
+     echo $str;//prikazemo tabelu
   session_unset($_SESSION["MyVar"]);
   session_destroy();
 ?>
