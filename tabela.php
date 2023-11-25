@@ -121,9 +121,10 @@ $n=0;
      $str.=" </head>\n";
      $str.=" <body>\n";
      $str .= "  <table>\n"; // zapocinjemo tabelu
-     $str .= "<tr><th>Naslov</th><th>Autor(i)</th><th>Izdanje</th><th>Mesto izdavanja</th><th>Izdavac</th><th>Godina izdavanja</th><th>Materijalni opis</th><th>Izdavacka celina</th><th>Sifra zapisa</th><th>Napomene</th><th>ISBN broj</th><th>Inv broj</th></tr>\n"; //dodajemo zaglavlje kolona
+     $str .= "<tr><th>Redni broj</th><th>Naslov</th><th>Autor(i)</th><th>Izdanje</th><th>Mesto izdavanja</th><th>Izdavac</th><th>Godina izdavanja</th><th>Materijalni opis</th><th>Izdavacka celina</th><th>Sifra zapisa</th><th>Napomene</th><th>ISBN broj</th><th>Inv broj</th></tr>\n"; //dodajemo zaglavlje kolona
      for($i=0;$i<$n;$i++){ 
     $str .= "<tr>"; //zapocinjemo vrstu tabele
+    $str .= "<td>"l $str1=$i+1; $str .= $str1; $str .= "</td>";  //generisemo redni broj i smestamo ga u polje tabele   
     $str .= "<td>"; $str1=$knjige[$i]->getNaslov(); $str .= $str1; $str .= "</td>"; //uzimamo podatak o naslovu i smestamo ga u polje tabele 
     $str .= "<td>"; $str1=$knjige[$i]->getAutor1(); $str .= $str1; $str1=$knjige[$i]->getAutor2(); $str .= $str1; $str .= "</td>"; //uzimamo podatke o autorima i smestamo ga u polje tabele 
     $str .= "<td>"; $str1=$knjige[$i]->getIzdanje(); $str .= $str1;  $str .= "</td>"; //uzimamo podatak o izdanju i smestamo ga u polje tabele
