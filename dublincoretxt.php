@@ -121,12 +121,12 @@ $str.="<records xmlns:dc=\"http://purl.org/dc/elements/1.1/\">\n";
        $str.="    <dc:description></dc:description>\n";
        $str.="  </record>\n";//zatvaramo tag za pojedinacni zapis
        
-
+//
      }
      $str.="</records>\n"; //zatvaramo tag za skup zapisa
    
-     header('Content-disposition: attachment; filename=dublincore.xml');//kreiramo izlazni fajl 
-     header('Content-Type:  text/xml');
+     //header('Content-disposition: attachment; filename=dublincore.xml');//kreiramo izlazni fajl 
+     //header('Content-Type:  text/xml');
      echo $str;//ispisujemo sadrzaj u fajl
 
      session_unset($_SESSION["MyVar"]);
